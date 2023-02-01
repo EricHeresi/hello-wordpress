@@ -3,17 +3,28 @@ services:
   mariadb:
     image: mariadb:latest
     environment:
-      - MARIADB_USER=example-user
-      - MARIADB_PASSWORD=my_cool_secret
-      - MARIADB_ROOT_PASSWORD=my-secret-pw
-      - MARIADB_DATABASE=wordpress
+      MYSQL_USER: example-user
+      MYSQL_PASSWORD: my_cool_secret
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+      MYSQL_DATABASE: wordpress
     #ports:
       #- "3306:3306"
     volumes:
       - ./mariadb-data/:/var/lib/mysql/
-  httpd:
-    image: httpd:2.4
+  #httpd:
+    #image: httpd:2.4
+    #ports:
+      #- "8080:80"
+    #volumes:
+      #- ./public-html/:/usr/local/apache2/htdocs/
+  wordpress:
+    image: wordpress:latest
     ports:
       - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: mariadb
+      WORDPRESS_DB_USER: example-user
+      WORDPRESS_DB_PASSWORD: my_cool_secret
+      WORDPRESS_DB_NAME: wordpress
     volumes:
-      - ./public-html/:/usr/local/apache2/htdocs/
+      - ./wordpress/:/var/www/html/
